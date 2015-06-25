@@ -18,6 +18,8 @@ class MainScene: CCNode {
     // second block of ground sprite
     weak var ground2:CCSprite!;
     
+    // makes sure obstacles are not rendered behind the player
+    weak var obstaclesLayer:CCNode!;
     
     /* custom variables */
     
@@ -31,11 +33,11 @@ class MainScene: CCNode {
     var groundBlocks:[CCSprite] = [];
     
     // array of obstacle nodes
-    var obstacles:[CCNode] = [];
+    var obstacles:[Obstacle] = [];
     
     // (arbitrarily defined) position at X axis of first obstacle to appear and the distance from one obstacle to another
     let firstObstacleXPosition:CGFloat = 280;
-    let xDistanceBetweenObstacles:CGFloat = 160;
+    let distanceBetweenObstaclesX:CGFloat = 160;
     
     
     /*** METHODS ***/
@@ -49,9 +51,10 @@ class MainScene: CCNode {
         self.groundBlocks.append(self.ground2);
         
         // creates first obstacle
-        let obstacle = CCBReader.load("Obstacle");
+        let obstacle = CCBReader.load("Obstacle") as! Obstacle;
         obstacle.position = ccp(firstObstacleXPosition, 0);
-        self.gamePhysicsNode.addChild(obstacle);
+        obstacle.setupRandomPosition();
+        self.obstaclesLayer.addChild(obstacle);
         self.obstacles.append(obstacle);
         
         // adds three more obstacles through custom function
@@ -127,11 +130,13 @@ class MainScene: CCNode {
     /* custom methods */
     
     func spawnNewObstacle() {
-        var prevObstaclePosition = obstacles.last!.position.x;
+        var prevObstacleXPosition = obstacles.last!.position.x;
         // creates the obstacle and appends it to the array
-        let obstacle = CCBReader.load("Obstacle");
-        obstacle.position = ccp(firstObstacleXPosition, 0);
-        self.gamePhysicsNode.addChild(obstacle);
+        let obstacle = CCBReader.load("Obstacle") as! Obstacle; // loads CCBR as an instance of Obstacle class
+        obstacle.position = ccp(prevObstacleXPosition + distanceBetweenObstaclesX, 0);
+        obstacle.setupRandomPosition(); // assigns a random position to the Y value
+        //self.gamePhysicsNode.addChild(obstacle); would be in front of hero like that
+        self.obstaclesLayer.addChild(obstacle);
         self.obstacles.append(obstacle);
     }
 }
