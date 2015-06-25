@@ -1,10 +1,21 @@
 import Foundation;
 
 class MainScene: CCNode {
+    
     /* code connections */
     
     // hero sprite
     weak var hero:CCSprite! ;
+    
+    // main physics node which affects all elements in screen
+    weak var gamePhysicsNode:CCPhysicsNode!;
+    
+    //first block of ground sprite; blocks will be put one after the other to give the impression of continuous advance.
+    weak var ground1:CCSprite!;
+    
+    // second block of ground sprite
+    weak var ground2:CCSprite!;
+    
     
     /* custom variables */
     
@@ -14,11 +25,16 @@ class MainScene: CCNode {
     // horizontal speed of bunny
     var scrollSpeed:CGFloat = 80;
     
+    // array of ground sprites to be intercalated; initialized as empty.
+    var groundBlocks:[CCSprite] = [];
+    
     /* native cocos2d methods */
     
-    // called every time a CCB file is loaded
+    // called every time a CCB file is loaded; see it as an "initializer" for the scene.
     func didLoadFromCCB() {
-        userInteractionEnabled = true;
+        self.userInteractionEnabled = true;
+        self.groundBlocks.append(self.ground1);
+        self.groundBlocks.append(self.ground2);
     }
     
     // called at every frame; will limit max velocity in the Y axis and move hero through X axis at constant speed.
@@ -30,11 +46,14 @@ class MainScene: CCNode {
         hero.physicsBody.velocity = ccp(0, CGFloat(velocityY));
         
         // manages rabbit rotation;
-        sinceTouch += delta;
-        hero.rotation = clampf(hero.rotation, -30, 90); // maximum rotation at 30 to left and 90 right
+        self.sinceTouch += delta;
+        self.hero.rotation = clampf(hero.rotation, -30, 90); // maximum rotation at 30 to left and 90 right
         
         // manages rabbit movement in both X and Y axis
-        hero.position = ccp(hero.position.x + scrollSpeed * CGFloat(delta), hero.position.y);
+        self.hero.position = ccp(hero.position.x + scrollSpeed * CGFloat(delta), hero.position.y);
+        
+        // goes "back left" at same speed that hero goes "forward right", maintains position in Y axis constant.
+        self.gamePhysicsNode.position = ccp(gamePhysicsNode.position.x - scrollSpeed * CGFloat(delta), gamePhysicsNode.position.y)
         
         // .allowsRotation is set to false when bunny dies
         if (hero.physicsBody.allowsRotation) {
@@ -42,9 +61,18 @@ class MainScene: CCNode {
             hero.physicsBody.angularVelocity = CGFloat(angularVelocity);
         }
         // starts rotating
-        if (sinceTouch > 0.3) {
+        if (self.sinceTouch > 0.3) {
             let impulse = -18000.0 * delta;
-            hero.physicsBody.applyAngularImpulse(CGFloat(impulse));
+            self.hero.physicsBody.applyAngularImpulse(CGFloat(impulse));
+        }
+        
+        // checks both ground sprites wheter they are out of the screen through the left boundary.
+        for ground in self.groundBlocks {
+            let groundWorldPosition = self.gamePhysicsNode.convertToWorldSpace(ground.position); // argument = nodePoint:CGPoint
+            let groundScreenPosition = convertToNodeSpace(groundWorldPosition); // argument = worldPoint:CGPoint
+            if (groundScreenPosition.x <= (-ground.contentSize.width)) {
+                ground.position = ccp(ground.position.x + (ground.contentSize.width * 2), ground.position.y); // returns CGPoint with x being the very endpoint of the screen while y remains constant
+            }
         }
     }
     
