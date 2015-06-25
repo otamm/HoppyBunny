@@ -112,7 +112,7 @@
 						<key>value</key>
 						<array>
 							<string></string>
-							<string>ccbResources/assets/background.png</string>
+							<string>assets/background.png</string>
 						</array>
 					</dict>
 					<dict>
@@ -220,7 +220,7 @@
 						<key>value</key>
 						<array>
 							<string></string>
-							<string>ccbResources/assets/ground.png</string>
+							<string>assets/ground.png</string>
 						</array>
 					</dict>
 					<dict>
@@ -256,6 +256,8 @@
 						<array/>
 					</dict>
 				</array>
+				<key>selected</key>
+				<true/>
 			</dict>
 			<dict>
 				<key>UUID</key>
@@ -328,7 +330,7 @@
 						<key>value</key>
 						<array>
 							<string></string>
-							<string>ccbResources/assets/clouds.png</string>
+							<string>assets/clouds.png</string>
 						</array>
 					</dict>
 					<dict>
@@ -364,8 +366,6 @@
 						<array/>
 					</dict>
 				</array>
-				<key>selected</key>
-				<true/>
 			</dict>
 		</array>
 		<key>customClass</key>

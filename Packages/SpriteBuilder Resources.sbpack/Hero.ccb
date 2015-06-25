@@ -52,12 +52,12 @@
 							<key>name</key>
 							<string>spriteFrame</string>
 							<key>time</key>
-							<real>0.033333335071802139</real>
+							<real>0.0</real>
 							<key>type</key>
 							<integer>7</integer>
 							<key>value</key>
 							<array>
-								<string>ccbResources/assets/bunny1.png</string>
+								<string>assets/bunny1.png</string>
 								<string>Use regular file</string>
 							</array>
 						</dict>
@@ -70,12 +70,12 @@
 							<key>name</key>
 							<string>spriteFrame</string>
 							<key>time</key>
-							<real>0.23333333432674408</real>
+							<real>0.20000000298023224</real>
 							<key>type</key>
 							<integer>7</integer>
 							<key>value</key>
 							<array>
-								<string>ccbResources/assets/bunny1.png</string>
+								<string>assets/bunny2.png</string>
 								<string>Use regular file</string>
 							</array>
 						</dict>
@@ -93,61 +93,7 @@
 							<integer>7</integer>
 							<key>value</key>
 							<array>
-								<string>ccbResources/assets/bunny1.png</string>
-								<string>Use regular file</string>
-							</array>
-						</dict>
-						<dict>
-							<key>easing</key>
-							<dict>
-								<key>type</key>
-								<integer>0</integer>
-							</dict>
-							<key>name</key>
-							<string>spriteFrame</string>
-							<key>time</key>
-							<real>0.60000002384185791</real>
-							<key>type</key>
-							<integer>7</integer>
-							<key>value</key>
-							<array>
-								<string>ccbResources/assets/bunny1.png</string>
-								<string>Use regular file</string>
-							</array>
-						</dict>
-						<dict>
-							<key>easing</key>
-							<dict>
-								<key>type</key>
-								<integer>0</integer>
-							</dict>
-							<key>name</key>
-							<string>spriteFrame</string>
-							<key>time</key>
-							<real>0.80000001192092896</real>
-							<key>type</key>
-							<integer>7</integer>
-							<key>value</key>
-							<array>
-								<string>ccbResources/assets/bunny1.png</string>
-								<string>Use regular file</string>
-							</array>
-						</dict>
-						<dict>
-							<key>easing</key>
-							<dict>
-								<key>type</key>
-								<integer>0</integer>
-							</dict>
-							<key>name</key>
-							<string>spriteFrame</string>
-							<key>time</key>
-							<real>0.96666663885116577</real>
-							<key>type</key>
-							<integer>7</integer>
-							<key>value</key>
-							<array>
-								<string>ccbResources/assets/bunny1.png</string>
+								<string>assets/bunny1.png</string>
 								<string>Use regular file</string>
 							</array>
 						</dict>
@@ -222,7 +168,7 @@
 			<dict>
 				<key>baseValue</key>
 				<array>
-					<string>ccbResources/assets/bunny1.png</string>
+					<string></string>
 					<string>Use regular file</string>
 				</array>
 				<key>name</key>
@@ -232,7 +178,7 @@
 				<key>value</key>
 				<array>
 					<string></string>
-					<string>ccbResources/assets/bunny1.png</string>
+					<string>assets/bunny2.png</string>
 				</array>
 			</dict>
 			<dict>
@@ -268,8 +214,6 @@
 				<array/>
 			</dict>
 		</array>
-		<key>selected</key>
-		<true/>
 		<key>seqExpanded</key>
 		<true/>
 	</dict>
@@ -319,15 +263,15 @@
 				<integer>12</integer>
 			</dict>
 			<key>chainedSequenceId</key>
-			<integer>-1</integer>
+			<integer>0</integer>
 			<key>length</key>
-			<real>1</real>
+			<real>0.40000000596046448</real>
 			<key>name</key>
 			<string>Default Timeline</string>
 			<key>offset</key>
 			<real>0.0</real>
 			<key>position</key>
-			<real>0.0</real>
+			<real>0.40000000596046448</real>
 			<key>resolution</key>
 			<real>30</real>
 			<key>scale</key>
