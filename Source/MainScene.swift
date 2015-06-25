@@ -2,6 +2,8 @@ import Foundation;
 
 class MainScene: CCNode {
     
+    /*** VARIABLES ***/
+    
     /* code connections */
     
     // hero sprite
@@ -22,11 +24,21 @@ class MainScene: CCNode {
     // time passsed since last touch.
     var sinceTouch:CCTime = 0;
     
-    // horizontal speed of bunny
+    // (arbitrarily defined) horizontal speed of bunny
     var scrollSpeed:CGFloat = 80;
     
     // array of ground sprites to be intercalated; initialized as empty.
     var groundBlocks:[CCSprite] = [];
+    
+    // array of obstacle nodes
+    var obstacles:[CCNode] = [];
+    
+    // (arbitrarily defined) position at X axis of first obstacle to appear and the distance from one obstacle to another
+    let firstObstacleXPosition:CGFloat = 280;
+    let xDistanceBetweenObstacles:CGFloat = 160;
+    
+    
+    /*** METHODS ***/
     
     /* native cocos2d methods */
     
@@ -35,6 +47,17 @@ class MainScene: CCNode {
         self.userInteractionEnabled = true;
         self.groundBlocks.append(self.ground1);
         self.groundBlocks.append(self.ground2);
+        
+        // creates first obstacle
+        let obstacle = CCBReader.load("Obstacle");
+        obstacle.position = ccp(firstObstacleXPosition, 0);
+        self.gamePhysicsNode.addChild(obstacle);
+        self.obstacles.append(obstacle);
+        
+        // adds three more obstacles through custom function
+        for i in 0...1 {
+            self.spawnNewObstacle();
+        }
     }
     
     // called at every frame; will limit max velocity in the Y axis and move hero through X axis at constant speed.
@@ -74,6 +97,21 @@ class MainScene: CCNode {
                 ground.position = ccp(ground.position.x + (ground.contentSize.width * 2), ground.position.y); // returns CGPoint with x being the very endpoint of the screen while y remains constant
             }
         }
+        
+        // removes the obstacle and then loads a new one each time an obstacle leaves the screen.
+        for obstacle in self.obstacles.reverse() {
+            let obstacleWorldPosition = gamePhysicsNode.convertToWorldSpace(obstacle.position);
+            let obstacleScreenPosition = convertToNodeSpace(obstacleWorldPosition);
+            
+            // obstacle moved past left side of screen?
+            if (obstacleScreenPosition.x < (-obstacle.contentSize.width)) {
+                obstacle.removeFromParent();
+                self.obstacles.removeAtIndex(find(obstacles, obstacle)!);
+                
+                // for each removed obstacle, add a new one
+                self.spawnNewObstacle();
+            }
+        }
     }
     
     /* native iOS methods */
@@ -84,5 +122,16 @@ class MainScene: CCNode {
         // rotates rabbit
         hero.physicsBody.applyAngularImpulse(10000);
         sinceTouch = 0;
+    }
+    
+    /* custom methods */
+    
+    func spawnNewObstacle() {
+        var prevObstaclePosition = obstacles.last!.position.x;
+        // creates the obstacle and appends it to the array
+        let obstacle = CCBReader.load("Obstacle");
+        obstacle.position = ccp(firstObstacleXPosition, 0);
+        self.gamePhysicsNode.addChild(obstacle);
+        self.obstacles.append(obstacle);
     }
 }
