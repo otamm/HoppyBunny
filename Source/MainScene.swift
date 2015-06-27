@@ -1,6 +1,6 @@
 import Foundation;
 
-class MainScene: CCNode {
+class MainScene: CCNode, CCPhysicsCollisionDelegate { // CCPhysicsCollisionDelegate indicates that some methods from CCPhysicsCollision class will be implemented in the class
     
     /*** VARIABLES ***/
     
@@ -21,6 +21,9 @@ class MainScene: CCNode {
     // makes sure obstacles are not rendered behind the player
     weak var obstaclesLayer:CCNode!;
     
+    // invisible restart button, to be shown once game over is triggered.
+    weak var restartButton:CCButton!;
+    
     /* custom variables */
     
     // time passsed since last touch.
@@ -34,6 +37,9 @@ class MainScene: CCNode {
     
     // array of obstacle nodes
     var obstacles:[Obstacle] = [];
+    
+    // used to check wheter the game is over or not
+    var gameOver = false;
     
     // (arbitrarily defined) position at X axis of first obstacle to appear and the distance from one obstacle to another
     let firstObstacleXPosition:CGFloat = 280;
@@ -61,6 +67,9 @@ class MainScene: CCNode {
         for i in 0...1 {
             self.spawnNewObstacle();
         }
+        
+        // assigns the main physics node as collision delegate
+        self.gamePhysicsNode.collisionDelegate = self;
     }
     
     // called at every frame; will limit max velocity in the Y axis and move hero through X axis at constant speed.
@@ -117,18 +126,29 @@ class MainScene: CCNode {
         }
     }
     
+    // triggered when a collision is detected amongst two objects of different collision types ('level' and 'hero' for this game)
+    func ccPhysicsCollisionBegin(pair: CCPhysicsCollisionPair!, hero: CCNode!, level: CCNode!) -> Bool {
+        //println("Implement Game Over");
+        // will spawn a sequence of actions: make restart button visible, make hero immobile, make screen freeze, etc.
+        self.triggerGameOver();
+        return true;
+    }
+    
     /* native iOS methods */
     
     // overrides a touch event with impulse being applied to make bunny jump/fly
     override func touchBegan(touch: CCTouch!, withEvent event: CCTouchEvent!) {
-        hero.physicsBody.applyImpulse(ccp(0,400)); // goes 0 ccp in X direction and 400 in Y direction. Gravity acceleration is currently 700ccp/s
-        // rotates rabbit
-        hero.physicsBody.applyAngularImpulse(10000);
-        sinceTouch = 0;
+        if !(gameOver) {
+            self.hero.physicsBody.applyImpulse(ccp(0,400)); // goes 0 ccp in X direction and 400 in Y direction. Gravity acceleration is currently 700ccp/s
+            // rotates rabbit
+            self.hero.physicsBody.applyAngularImpulse(10000);
+            self.sinceTouch = 0;
+        }
     }
     
     /* custom methods */
     
+    // loads a new 'Obstacle' node from SpriteBuilder as an Obstacle class instance.
     func spawnNewObstacle() {
         var prevObstacleXPosition = obstacles.last!.position.x;
         // creates the obstacle and appends it to the array
@@ -138,5 +158,29 @@ class MainScene: CCNode {
         //self.gamePhysicsNode.addChild(obstacle); would be in front of hero like that
         self.obstaclesLayer.addChild(obstacle);
         self.obstacles.append(obstacle);
+    }
+    
+    // reloads game, beginning all over again.
+    func restart() {
+        let scene = CCBReader.loadAsScene("MainScene");
+        CCDirector.sharedDirector().presentScene(scene);
+    }
+    
+    func triggerGameOver() {
+        if !(self.gameOver) {
+            self.gameOver = true;
+            self.restartButton.visible = true;
+            self.scrollSpeed = 0;
+            self.hero.rotation = 90;
+            self.hero.physicsBody.allowsRotation = false;
+            
+            // just in case
+            self.hero.stopAllActions();
+            
+            let move = CCActionEaseBounceOut(action: CCActionMoveBy(duration: 0.2, position: ccp(0, 4)));
+            let moveBack = CCActionEaseBounceOut(action: move.reverse());
+            let shakeSequence = CCActionSequence(array: [move, moveBack]);
+            self.runAction(shakeSequence);
+        }
     }
 }

@@ -37,5 +37,5 @@ class Obstacle:CCNode {
         self.carrotTop.physicsBody.sensor = true;
         self.carrotBottom.physicsBody.sensor = true;
     }
-    
+
 }
