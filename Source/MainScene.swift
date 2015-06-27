@@ -95,7 +95,15 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate { // CCPhysicsCollisionDeleg
         self.hero.position = ccp(hero.position.x + scrollSpeed * CGFloat(delta), hero.position.y);
         
         // goes "back left" at same speed that hero goes "forward right", maintains position in Y axis constant.
-        self.gamePhysicsNode.position = ccp(gamePhysicsNode.position.x - scrollSpeed * CGFloat(delta), gamePhysicsNode.position.y)
+        self.gamePhysicsNode.position = ccp(gamePhysicsNode.position.x - scrollSpeed * CGFloat(delta), gamePhysicsNode.position.y);
+        
+        // rounds positions to "full" numbers, preventing a sprite from shadowing the other (even minimally)
+        //self.gamePhysicsNode.position = ccp(round(gamePhysicsNode.position.x),
+        //    round(gamePhysicsNode.position.y));
+        // enhanced
+        let scale = CCDirector.sharedDirector().contentScaleFactor; // scales according with wheter or not device has Retina screen (value is 1.0 if it does not);
+        self.gamePhysicsNode.position = ccp(round(self.gamePhysicsNode.position.x * scale) / scale, round(self.gamePhysicsNode.position.y * scale) / scale);
+        self.hero.position = ccp(round(self.hero.position.x * scale) / scale, round(self.hero.position.y * scale) / scale);
         
         // .allowsRotation is set to false when bunny dies
         if (hero.physicsBody.allowsRotation) {
