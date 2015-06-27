@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Apportable. All rights reserved.
 //
 
-import Foundation
+import Foundation;
 
 class Obstacle:CCNode {
     

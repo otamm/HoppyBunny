@@ -24,6 +24,9 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate { // CCPhysicsCollisionDeleg
     // invisible restart button, to be shown once game over is triggered.
     weak var restartButton:CCButton!;
     
+    // displays score
+    weak var scoreLabel:CCLabelTTF!;
+    
     /* custom variables */
     
     // time passsed since last touch.
@@ -40,6 +43,9 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate { // CCPhysicsCollisionDeleg
     
     // used to check wheter the game is over or not
     var gameOver = false;
+    
+    // keeps track of score.
+    var score:NSInteger = 0;
     
     // (arbitrarily defined) position at X axis of first obstacle to appear and the distance from one obstacle to another
     let firstObstacleXPosition:CGFloat = 280;
@@ -70,6 +76,7 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate { // CCPhysicsCollisionDeleg
         
         // assigns the main physics node as collision delegate
         self.gamePhysicsNode.collisionDelegate = self;
+        self.scoreLabel.string = "\(self.score)";
     }
     
     // called at every frame; will limit max velocity in the Y axis and move hero through X axis at constant speed.
@@ -125,12 +132,21 @@ class MainScene: CCNode, CCPhysicsCollisionDelegate { // CCPhysicsCollisionDeleg
             }
         }
     }
+    // collision-handling methods
     
-    // triggered when a collision is detected amongst two objects of different collision types ('level' and 'hero' for this game)
+    // triggered when a collision is detected amongst two objects of different collision types ('level' and 'hero')
     func ccPhysicsCollisionBegin(pair: CCPhysicsCollisionPair!, hero: CCNode!, level: CCNode!) -> Bool {
         //println("Implement Game Over");
         // will spawn a sequence of actions: make restart button visible, make hero immobile, make screen freeze, etc.
         self.triggerGameOver();
+        return true;
+    }
+    
+    // triggered when a collision is detected amongst two objects of different collision types ('goal' and 'hero' for this game)
+    func ccPhysicsCollisionBegin(pair: CCPhysicsCollisionPair!,hero: CCNode!, goal: CCNode!) -> Bool {
+        goal.removeFromParent(); //destroys 'Goal' instance
+        self.score++;
+        self.scoreLabel.string = "\(self.score)";
         return true;
     }
     
